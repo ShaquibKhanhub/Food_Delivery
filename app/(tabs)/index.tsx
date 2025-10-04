@@ -3,6 +3,7 @@ import { images, offers } from "@/constants";
 import cn from "clsx";
 import { Fragment } from "react";
 import {
+  Dimensions,
   FlatList,
   Image,
   Pressable,
@@ -11,9 +12,10 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import "./globals.css";
+
 
 export default function Index() {
+  const { width } = Dimensions.get("window");
   return (
     <SafeAreaView className="flex-1 bg-white">
       <FlatList
@@ -34,7 +36,7 @@ export default function Index() {
                     <View className="w-1/2 items-center justify-center">
                       <Image
                         source={item.image}
-                        className="w-16 h-16"
+                        style={{ width: width * 0.5, height: width * 0.8 }}
                         resizeMode="contain"
                       />
                     </View>
