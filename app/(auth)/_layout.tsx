@@ -35,8 +35,14 @@ export default function _Layout() {
           />
         </View>
 
+
+        
+
         <Slot />
       </ScrollView>
+      {
+
+      }
     </KeyboardAvoidingView>
   );
 }

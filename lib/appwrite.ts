@@ -15,7 +15,7 @@ export const appwriteConfig = {
   databaseId: process.env.EXPO_PUBLIC_APPWRITE_DATABASE_ID!,
   userCollectionId: process.env.EXPO_PUBLIC_APPWRITE_USER_COLLECTION_ID!,
 };
-console.log(appwriteConfig);
+// console.log(appwriteConfig);
 export const client = new Client();
 
 client
@@ -49,7 +49,7 @@ export const createUser = async ({
     const userDoc = await databases.createDocument(
       appwriteConfig.databaseId,
       appwriteConfig.userCollectionId,
-      ID.unique(),
+      newAccount.$id,
       {
         email,
         name,
@@ -85,7 +85,7 @@ export const getCurrentUser = async () => {
     );
 
     if (!currentUser) throw Error;
-
+console.log(currentUser.documents[0]);
     return currentUser.documents[0];
   } catch (e) {
     console.log(e);
