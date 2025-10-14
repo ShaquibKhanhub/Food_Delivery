@@ -11,6 +11,7 @@ type AuthState = {
     setUser: (user: User | null) => void;
     setLoading: (loading: boolean) => void;
 
+
     fetchAuthenticatedUser: () => Promise<void>;
 }
 
@@ -40,4 +41,8 @@ const useAuthStore = create<AuthState>((set) => ({
     }
 }))
 
+
 export default useAuthStore;
+
+
+
