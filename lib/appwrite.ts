@@ -1,4 +1,4 @@
-import { CreateUserPrams, GetMenuParams, SignInParams } from "@/type";
+import { CreateUserPrams, GetMenuParams, SignInParams, User, MenuItem, Category } from "@/type";
 import {
   Account,
   Avatars,
@@ -6,15 +6,23 @@ import {
   Databases,
   ID,
   Query,
+  Storage
 } from "react-native-appwrite";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
 export const appwriteConfig = {
-  endpoint: process.env.EXPO_PUBLIC_APPWRITE_ENDPOINT!,
+  endpoint: process.env.EXPO_PUBLIC_APPWRITE_ENDPOINT?.trim() || "",
   platform: "com.khan.foodordering",
-  projectId: process.env.EXPO_PUBLIC_APPWRITE_PROJECT_ID!,
-  databaseId: process.env.EXPO_PUBLIC_APPWRITE_DATABASE_ID!,
-  userCollectionId: process.env.EXPO_PUBLIC_APPWRITE_USER_COLLECTION_ID!,
+  projectId: process.env.EXPO_PUBLIC_APPWRITE_PROJECT_ID?.trim() || "",
+  databaseId: process.env.EXPO_PUBLIC_APPWRITE_DATABASE_ID?.trim() || "",
+  bucketId: process.env.EXPO_PUBLIC_APPWRITE_BUCKET_ID?.trim() || "",
+  userCollectionId: process.env.EXPO_PUBLIC_APPWRITE_USER_COLLECTION_ID?.trim() || "",
+  categoriesCollectionId: process.env.EXPO_PUBLIC_APPWRITE_CATEGORY_COLLECTION_ID?.trim() || "",
+  menuCollectionId: process.env.EXPO_PUBLIC_APPWRITE_MENU_COLLECTION_ID?.trim() || "",
+  customizationsCollectionId: process.env.EXPO_PUBLIC_APPWRITE_CUSTOMIZATIONS_ID?.trim() || "",
+  menuCustomizationsCollectionId: process.env.EXPO_PUBLIC_APPWRITE_MENU_CUSTOMIZATIONS_ID?.trim() || "",
 };
+
 // console.log(appwriteConfig);
 export const client = new Client();
 
@@ -26,6 +34,8 @@ client
 export const account = new Account(client);
 
 export const databases = new Databases(client);
+
+export const storage = new Storage(client)
 
 const avatars = new Avatars(client);
 
@@ -65,14 +75,15 @@ console.log(userDoc);
   }
 };
 
-export const signIn = async ({ email, password }: SignInParams) => {
+export const signIn = async ({ email, password }: { email: string; password: string }) => {
   try {
     const session = await account.createEmailPasswordSession(email, password);
-  } catch (e) {
-    throw new Error(e as string);
+    return session; // ✅ return the session so caller can use it
+  } catch (e: any) {
+    console.error("Sign-in error:", e);
+    throw new Error(e.message || "Failed to sign in");
   }
 };
-
 export const getCurrentUser = async () => {
   try {
     const currentAccount = await account.get();
@@ -86,7 +97,7 @@ export const getCurrentUser = async () => {
 
     if (!currentUser) throw Error;
 console.log(currentUser.documents[0]);
-    return currentUser.documents[0];
+    return currentUser.documents[0] as unknown as User;
   } catch (e) {
     console.log(e);
     throw new Error(e as string);
@@ -106,7 +117,7 @@ export const getMenu = async ({ category, query }: GetMenuParams) => {
       queries
     );
 
-    return menus.documents;
+    return menus.documents as MenuItem[];
   } catch (e) {
     throw new Error(e as string);
   }
@@ -119,7 +130,7 @@ export const getCategories = async () => {
       appwriteConfig.categoriesCollectionId
     );
 
-    return categories.documents;
+    return categories.documents as Category[];
   } catch (e) {
     throw new Error(e as string);
   }

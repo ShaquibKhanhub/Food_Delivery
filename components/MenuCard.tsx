@@ -8,7 +8,9 @@ const MenuCard = ({
 }: {
   item: MenuItem;
 }) => {
-  const imageUrl = `${image_url}?project=${appwriteConfig.projectId}`;
+  const imageUrl = image_url;
+console.log('image',imageUrl,)
+
   const { addItem } = useCartStore();
 
   return (
