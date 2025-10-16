@@ -28,5 +28,6 @@
   ],
   "ts-node": {
     "esm": true
-  }
+  },
+  "extends": "expo/tsconfig.base"
 }

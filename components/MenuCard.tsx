@@ -1,4 +1,3 @@
-import { appwriteConfig } from "@/lib/appwrite";
 import { useCartStore } from "@/store/cart.store";
 import { MenuItem } from "@/type";
 import { Image, Platform, Text, TouchableOpacity } from "react-native";
@@ -9,7 +8,6 @@ const MenuCard = ({
   item: MenuItem;
 }) => {
   const imageUrl = image_url;
-console.log('image',imageUrl,)
 
   const { addItem } = useCartStore();
 

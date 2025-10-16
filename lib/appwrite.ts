@@ -123,6 +123,7 @@ export const getMenu = async ({ category, query }: GetMenuParams) => {
   }
 };
 
+
 export const getCategories = async () => {
   try {
     const categories = await databases.listDocuments(
@@ -135,3 +136,4 @@ export const getCategories = async () => {
     throw new Error(e as string);
   }
 };
+
