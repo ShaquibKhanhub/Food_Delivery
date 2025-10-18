@@ -23,7 +23,7 @@ export const appwriteConfig = {
   menuCustomizationsCollectionId: process.env.EXPO_PUBLIC_APPWRITE_MENU_CUSTOMIZATIONS_ID?.trim() || "",
 };
 
-// console.log(appwriteConfig);
+console.log(appwriteConfig);
 export const client = new Client();
 
 client
@@ -116,7 +116,7 @@ export const getMenu = async ({ category, query }: GetMenuParams) => {
       appwriteConfig.menuCollectionId,
       queries
     );
-
+ return menus.documents as MenuItem[];
     return menus.documents as MenuItem[];
   } catch (e) {
     throw new Error(e as string);
@@ -130,10 +130,64 @@ export const getCategories = async () => {
       appwriteConfig.databaseId,
       appwriteConfig.categoriesCollectionId
     );
-
-    return categories.documents as Category[];
+return categories.documents as Category[];
   } catch (e) {
     throw new Error(e as string);
   }
 };
 
+export const signOut = async () => {
+  try {
+    const session = await account.deleteSession("current");
+    return session;
+  } catch (e) {
+    throw new Error(e as string);
+  }
+}
+
+export const updateUser = async (userId: string, data: Partial<User>) => {
+  try {
+    const updatedUser = await databases.updateDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.userCollectionId,
+      userId,
+      data
+    );
+    return updatedUser;
+  } catch (e: any) {
+    console.error("Update user error:", e);
+    throw new Error(e.message || "Failed to update user");
+  }
+};
+
+export const uploadFile = async (file: any) => {
+  try {
+    const uploadedFile = await storage.createFile(
+      appwriteConfig.bucketId,
+      ID.unique(),
+      file
+    );
+    return uploadedFile;
+  } catch (e: any) {
+    console.error("File upload error:", e);
+    throw new Error(e.message || "Failed to upload file");
+  }
+};
+
+export const getFilePreview = (fileId: string) => {
+  try {
+    const fileUrl = storage.getFilePreview(
+      appwriteConfig.bucketId,
+      fileId,
+      2000,
+      2000,
+      "top",
+      100
+    );
+    if (!fileUrl) throw new Error("Failed to get file preview");
+    return fileUrl;
+  } catch (e: any) {
+    console.error("Get file preview error:", e);
+    throw new Error(e.message || "Failed to get file preview");
+  }
+};

@@ -88,6 +88,7 @@ interface ProfileFieldProps {
     label: string;
     value: string;
     icon: ImageSourcePropType;
+    onPress?: () => void;
 }
 
 interface CreateUserPrams {
